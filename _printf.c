@@ -13,41 +13,44 @@
 int _printf(const char *format, ...)
 {
 	va_list args;
-	int count = 0;
+	const char *p = format;
+	unsigned int printed_char = 0;
 
 	va_start(args, format);
-	while (*format)
+	while (*p != '\0')
 	{
-		if (*format == '%')
+		if (*p == '%')
 		{
-			format++;
-			if (*format == 'c')
-			{
-				char c = va_arg(args, int);
-
-				putchar(c);
-				count++;
-			}
-			else if (*format == 's')
-			{
-				char *s = va_arg(args, char *);
-
-					fputs(s, stdout);
-					count += strlen(s);
-			}
-			else if (*format == '%')
+			++p;
+			if (*p == 'c')
+				printed_char = printChar(args, printed_char);
+			else if (*p == 's')
+				printed_char = printStr(args, printed_char);
+			else if (*p == 'd' || *p == 'i')
+				printed_char = printInt(args, printed_char);
+			else if (*p == 'u')
+				printed_char = printUsign(args, printed_char);
+			else if (*p == 'o')
+				printed_char = printOctal(args, printed_char);
+			else if (*p == 'x')
+				printed_char = printHexLow(args, printed_char);
+			else if (*p == 'X')
+				printed_char = printHexUp(args, printed_char);
+			else if (*p == 'b')
+				printed_char = printBinary(args, printed_char);
+			else if (*p == '%')
 			{
 				putchar('%');
-				count++;
+				++printed_char;
 			}
 		}
 		else
 		{
-			putchar(*format);
-			count++;
+			putchar(*p);
+			++printed_char;
 		}
-		format++;
+		++p;
 	}
 	va_end(args);
-	return (count);
+	return (printed_char);
 }
