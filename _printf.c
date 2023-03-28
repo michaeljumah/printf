@@ -14,26 +14,26 @@ int _printf(const char *format, ...)
 {
 	va_list args;
 
-	char c, *str;
 	const char *p = format;
 	int chars_printed = 0;
 
 	va_start(args, format);
-
 	while (*p != '\0')
 	{
 		if (*p == '%')
 		{
-			++p
+			++p;
 				if (*p == 'c')
 				{
-					c = va_arg(args, int);
+					char c = va_arg(args, int);
+
 					putchar(c);
-					++chars_printed
+					++chars_printed;
 				}
 				else if (*p == 's')
 				{
-					str = va_arg(arg, char *);
+					char *str = va_arg(args, char *);
+
 					fputs(str, stdout);
 					chars_printed += strlen(str);
 				}
